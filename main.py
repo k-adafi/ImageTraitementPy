@@ -7,7 +7,6 @@ import numpy as np
 import cv2
 from PIL import Image, ImageTk
 
-
 largeur = 400
 hauteur = 450
 
@@ -16,18 +15,17 @@ hauteurImage = 448
 
 # Créer la fenêtre principale
 window = tk.Tk()
-window.title("Fenêtre Tkinter avec Images et Boutons")
+window.title("Etiquetage Image")
 window.geometry("1280x670")
 window.minsize(600, 350)
 
 # Changer la couleur de fond
 window.configure(bg='lightblue')
 
-
 # Ajouter le grand titre
-title_label = tk.Label(window, text="APPLICATION ETIQUETAGE IMAGE - M1 Images et Interactions", font=("Berlin sans FB", 24, "bold"), fg='blue', bg='lightblue')
+title_label = tk.Label(window, text="APPLICATION ETIQUETAGE IMAGE - M1 Images et Interactions",
+                       font=("Berlin sans FB", 24, "bold"), fg='blue', bg='lightblue')
 title_label.grid(row=0, column=0, columnspan=3, pady=5, padx=5)
-
 
 # Variables globales
 imageOriginale = None
@@ -98,6 +96,39 @@ def etiqueter_image():
     image_label3.image = photo
 
 
+# Fonction pour l'étiquetage des composants connexes
+"""def etiqueter_image():
+    global imageBinaireGris
+    if imageBinaireGris is None:
+        messagebox.showerror("Erreur", "Aucune image binaire n'a été convertie!")
+        return
+
+    # Seuillage binaire pour s'assurer que l'image est bien binaire
+    _, binary_image = cv2.threshold(imageBinaireGris, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+
+    # Inverser les couleurs pour avoir le fond noir et les composants blancs
+    binary_image = cv2.bitwise_not(binary_image)
+
+    # Etiquetage des composants connexes avec statistiques
+    num_labels, labels_im, stats, centroids = cv2.connectedComponentsWithStats(binary_image, connectivity=8)
+
+    # Filtrage des petits composants (optionnel)
+    min_size = 50  # Taille minimale des composants à garder
+    for label in range(1, num_labels):  # Commencer à 1 pour ignorer l'arrière-plan
+        if stats[label, cv2.CC_STAT_AREA] < min_size:
+            labels_im[labels_im == label] = 0
+
+    # Re-normalisation des étiquettes après filtrage
+    labels_im = (labels_im * 255 / (num_labels - 1)).astype(np.uint8)
+
+    # Affichage dans image_label3
+    image_pil = Image.fromarray(labels_im)
+    image_pil = image_pil.resize((largeurImage, hauteurImage), Image.LANCZOS)
+    photo = ImageTk.PhotoImage(image_pil)
+    image_label3.config(image=photo)
+    image_label3.image = photo"""
+
+
 # Fonction pour vider les cases
 def viderCases():
     global image_label1, image_label2, image_label3
@@ -166,7 +197,7 @@ for ligne in range(1):
         image_frame3.grid(row=1, column=2, padx=10, pady=10)
         image_frame3.grid_propagate(False)
 
-# Créer des labels pour afficher les images dans les cadres
+# Créer des labels pour afficher les images dans les cadres de chaque frames
 image_label1 = tk.Label(image_frame1, bg='white', bd=2, relief='solid')
 image_label1.pack(expand=True, fill='both')
 
@@ -200,7 +231,6 @@ button4.grid(row=3, column=1, padx=40, pady=0)
 button4 = tk.Button(window, text="Quitter le programme", font=("Berlin sans FB", 14), bg='#5187ec', fg="white",
                     command=quit_app, width=30, height=1)
 button4.grid(row=3, column=2, padx=40, pady=0)
-
 
 # Créer un menu
 menu = tk.Menu(window, bg="lightblue", fg="black", font=("Berlin sans FB", 14))
